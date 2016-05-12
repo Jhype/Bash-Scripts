@@ -1,7 +1,14 @@
 #!/bin/bash
-if [ -z $(which xclip) ]; 
+EMAIL='' # Add your email here if you wish to use this script frequently.
+if [ "$EMAIL" = "" ] && [ "$1" = "" ]; then
+    echo "Usage: $0 <youremail@email.com>"
+    exit 1
+fi
+EMAIL="$1"
+
+if [ -z $(which xclip) ];
 then
-	
+
 	if [[ $(uname -a) == *"fedora"* ]];
 	then
 		sudo dnf install xclip
@@ -10,9 +17,9 @@ then
 	fi
 fi
 
-ssh-keygen -t rsa -b 4096 -C "youremail@email.com"
+ssh-keygen -t rsa -b 4096 -C "$EMAIL"
 ssh-add /root/.ssh/id_rsa
-cd .ssh
+cd ${HOME}/.ssh
 xclip -sel clip < id_rsa.pub
-git config --global user.email "youremail@email.com"
+git config --global user.email "$EMAIL"
 
